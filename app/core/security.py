@@ -6,10 +6,12 @@ from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 
 from app.core.config import settings
+from app.repositories.base_repository import AbstractRepository
+from app.repositories.user_repository import UserRepository
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login/")
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
@@ -23,15 +25,8 @@ def get_password_hash(password: str) -> str:
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
     expires = datetime.timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expires, "token_type": "access"})
-    token = jwt.encode(to_encode, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
-    return token
-
-
-def create_refresh_token(data: dict) -> str:
-    to_encode = data.copy()
-    expires = datetime.timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expires, "token_type": "refresh"})
+    current_time = datetime.datetime.now(datetime.timezone.utc)
+    to_encode.update({"exp": current_time + expires})
     token = jwt.encode(to_encode, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
     return token
 
@@ -44,3 +39,15 @@ def get_payload(token: str = Depends(oauth2_scheme)) -> dict:
         raise HTTPException(status_code=401, detail="Expired token")
     except jwt.InvalidTokenError:
         raise HTTPException(status_code=401, detail="Invalid token")
+
+
+async def find_user_by_payload(
+    payload: dict = Depends(get_payload), user_repo: AbstractRepository = Depends(UserRepository)
+):
+    user_id = payload.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=404, detail="User not found")
+    user = await user_repo.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user

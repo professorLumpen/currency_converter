@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from fastapi import HTTPException
 from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
@@ -33,16 +34,23 @@ class Repository(AbstractRepository):
         self.session = session
 
     async def find_one(self, data: dict):
-        conditions = [getattr(self.model, key) == val for key, val in data.items()]
+        filters = data.copy()
+        filters.pop("password", None)
+        conditions = [getattr(self.model, key) == val for key, val in filters.items()]
+
         query = select(self.model).where(and_(*conditions))
         result = await self.session.execute(query)
-        return result.scalar_one()
+
+        return result.scalar_one_or_none()
 
     async def find_all(self):
         result = await self.session.execute(select(self.model))
         return result.scalars().all()
 
     async def add_one(self, data: dict):
+        obj = await self.find_one(data)
+        if obj:
+            raise HTTPException(401, "User already exists")
         new_obj = self.model(**data)
         self.session.add(new_obj)
         await self.session.commit()

@@ -12,8 +12,8 @@ class Settings(BaseSettings):
     DB_NAME: str
     CURRENCY_API_KEY: str
     JWT_SECRET_KEY: str
-    ACCESS_TOKEN_EXPIRE_MINUTES: str
-    REFRESH_TOKEN_EXPIRE_MINUTES: str
+    JWT_ALGORITHM: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int
 
     @property
     def ASYNC_DATABASE_URL(self):
