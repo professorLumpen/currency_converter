@@ -10,7 +10,6 @@ user_router = APIRouter(prefix="/auth", tags=["auth"])
 
 @user_router.post("/register/", response_model=UserFromDB)
 async def register(user_data: UserCreate, user_repo: UserRepository = Depends(get_user_repository)) -> UserFromDB:
-    print(user_data)
     user_dict = user_data.model_dump()
     user_dict["password"] = get_password_hash(user_dict["password"])
 
@@ -28,7 +27,7 @@ async def login(user_data: UserLogin, user_repo: UserRepository = Depends(get_us
         raise HTTPException(status_code=404, detail="User not found")
 
     if verify_password(user_data.password, user_from_db.password):
-        payload_data = {"sub": user_from_db.id}
+        payload_data = {"sub": str(user_from_db.id)}
         return {"token": create_access_token(payload_data)}
 
     raise HTTPException(status_code=401, detail="Incorrect username or password")
