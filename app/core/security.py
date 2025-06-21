@@ -33,13 +33,11 @@ def create_access_token(data: dict) -> str:
 
 def get_payload(token: str = Depends(oauth2_scheme)) -> dict:
     try:
-        print(token)
         payload = jwt.decode(token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
         return payload
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Expired token")
-    except jwt.InvalidTokenError as e:
-        print(e)
+    except jwt.InvalidTokenError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
 
@@ -53,7 +51,7 @@ async def find_user_id_by_payload(payload: dict = Depends(get_payload)):
 async def get_current_user(
     user_id: int = Depends(find_user_id_by_payload), user_repo: AbstractRepository = Depends(get_user_repository)
 ):
-    user = await user_repo.find_one({"id": user_id})
+    user = await user_repo.find_one({"id": int(user_id)})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user

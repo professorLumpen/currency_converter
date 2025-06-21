@@ -9,6 +9,11 @@ from app.repositories.base_repository import Repository
 class UserRepository(Repository):
     model = User
 
+    async def find_one(self, data: dict):
+        filters = data.copy()
+        filters.pop("password", None)
+        return await super().find_one(filters)
+
 
 async def get_user_repository(session: AsyncSession = Depends(get_async_session)) -> UserRepository:
     user_repository = UserRepository(session)

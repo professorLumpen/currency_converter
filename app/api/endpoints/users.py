@@ -23,9 +23,6 @@ async def register(user_data: UserCreate, user_repo: UserRepository = Depends(ge
 async def login(user_data: UserLogin, user_repo: UserRepository = Depends(get_user_repository)):
     user_from_db = await user_repo.find_one({"username": user_data.username})
 
-    if not user_from_db:
-        raise HTTPException(status_code=404, detail="User not found")
-
     if verify_password(user_data.password, user_from_db.password):
         payload_data = {"sub": str(user_from_db.id)}
         return {"token": create_access_token(payload_data)}
