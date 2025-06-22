@@ -33,12 +33,17 @@ class Repository(AbstractRepository):
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    async def find_one(self, data: dict):
+    async def get_obj(self, data: dict):
         conditions = [getattr(self.model, key) == val for key, val in data.items()]
 
         query = select(self.model).where(and_(*conditions))
         result = await self.session.execute(query)
         obj = result.scalar_one_or_none()
+
+        return obj
+
+    async def find_one(self, data: dict):
+        obj = await self.get_obj(data)
 
         if not obj:
             raise HTTPException(status_code=404, detail="Object not found")
@@ -50,9 +55,10 @@ class Repository(AbstractRepository):
         return result.scalars().all()
 
     async def add_one(self, data: dict):
-        obj = await self.find_one(data)
+        obj = await self.get_obj(data)
+
         if obj:
-            raise HTTPException(401, "Object already exists")
+            raise HTTPException(status_code=403, detail="Object already exists")
 
         new_obj = self.model(**data)
         self.session.add(new_obj)

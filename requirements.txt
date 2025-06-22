@@ -1,6 +1,7 @@
 alembic==1.16.2
 annotated-types==0.7.0
 anyio==4.9.0
+asyncio==3.4.3
 asyncpg==0.30.0
 bcrypt==4.3.0
 black==25.1.0
@@ -50,6 +51,7 @@ pyflakes==3.3.2
 Pygments==2.19.1
 PyJWT==2.10.1
 pytest==8.4.1
+pytest-asyncio==1.0.0
 python-dotenv==1.1.0
 python-multipart==0.0.20
 PyYAML==6.0.2

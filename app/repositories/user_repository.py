@@ -9,12 +9,12 @@ from app.repositories.base_repository import Repository
 class UserRepository(Repository):
     model = User
 
-    async def find_one(self, data: dict):
+    async def get_obj(self, data: dict):
         filters = data.copy()
         filters.pop("password", None)
-        return await super().find_one(filters)
+        return await super().get_obj(filters)
 
 
-async def get_user_repository(session: AsyncSession = Depends(get_async_session)) -> UserRepository:
+def get_user_repository(session: AsyncSession = Depends(get_async_session)) -> UserRepository:
     user_repository = UserRepository(session)
     return user_repository
