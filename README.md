@@ -74,7 +74,12 @@
   + ACCESS_TOKEN_EXPIRE_MINUTES=30
 
 
+* Примените миграции
+
+``` alembic upgrade head ```
+
 * Запустите приложение
+
 ``` uvicorn main:app --reload ```
 
 
