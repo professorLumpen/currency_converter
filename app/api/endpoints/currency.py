@@ -20,4 +20,4 @@ async def get_currencies_rate(
 @currency_router.get("/list/", response_model=CurrenciesList, dependencies=[Depends(get_current_user)])
 async def get_currencies_list(currency_service: AbstractCurrencyService = Depends(CurrencyLayerService)):
     currencies_list = await currency_service.get_currencies_list()
-    return currencies_list
+    return {"currencies": currencies_list}
