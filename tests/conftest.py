@@ -38,3 +38,12 @@ async def async_client(test_app):
     transport = ASGITransport(test_app)
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
         yield ac
+
+
+@pytest.fixture
+async def test_token(async_client):
+    register_data = {"username": "string", "password": "stringstri"}
+    await async_client.post("/auth/register/", json=register_data)
+    response = await async_client.post("/auth/login/", json=register_data)
+    token = response.json()["token"]
+    return token

@@ -9,7 +9,7 @@ user_router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 @user_router.post("/register/", response_model=UserFromDB)
-async def register(user_data: UserCreate, user_repo: UserRepository = Depends(get_user_repository)) -> UserFromDB:
+async def register(user_data: UserCreate, user_repo: UserRepository = Depends(get_user_repository)):
     user_dict = user_data.model_dump()
     user_dict["password"] = get_password_hash(user_dict["password"])
 
