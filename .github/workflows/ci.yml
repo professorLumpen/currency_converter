@@ -40,7 +40,7 @@ jobs:
       DB_NAME: ${{ secrets.DB_NAME }}
       TEST_DB_NAME: ${{ secrets.TEST_DB_NAME }}
       CURRENCY_API_KEY: ${{ secrets.CURRENCY_API_KEY }}
-      CURRENCY_API_URL: ${{ secrets.CURRENCY_API_URL }} # если тоже секрет
+      CURRENCY_API_URL: ${{ secrets.CURRENCY_API_URL }}
       JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
 
     steps:
