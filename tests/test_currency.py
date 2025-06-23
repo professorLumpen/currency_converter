@@ -35,12 +35,12 @@ async def test_currency_list(async_client, test_token):
     with patch(
         "app.utils.external_api.CurrencyLayerService.get_currencies_list", new_callable=AsyncMock
     ) as currency_list_mock:
-        result = {"currencies": {"RUB": "RUSSIAN", "EUR": "Euro"}, "more info": "optional"}
+        result = {"RUB": "RUSSIAN", "EUR": "Euro"}
         currency_list_mock.return_value = result
 
         response = await async_client.get("/currency/list/", headers={"Authorization": f"Bearer {test_token}"})
         assert response.status_code == 200
-        assert response.json()["currencies"] == result["currencies"]
+        assert response.json()["currencies"] == result
         currency_list_mock.assert_awaited_once()
 
 

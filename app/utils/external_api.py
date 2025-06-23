@@ -37,7 +37,7 @@ class CurrencyLayerService(AbstractCurrencyService):
         url = self.list_link
         response = await self.client.get(url)
         response.raise_for_status()
-        currencies = response.json().get("currencies")
+        currencies = response.json().get("currencies", None)
         if not currencies:
             raise HTTPException(status_code=404, detail="No currencies found")
         return currencies
