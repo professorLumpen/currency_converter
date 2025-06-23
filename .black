@@ -6,5 +6,6 @@ extend-exclude = '''
     alembic,
     docker,
     .git,
+    .github,
     __pycache__)
 '''
