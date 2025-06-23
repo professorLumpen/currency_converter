@@ -68,7 +68,7 @@
   + DB_NAME=your_db_name
   + TEST_DB_NAME=your_test_db_name 
   + CURRENCY_API_KEY=your_api_key 
-  + CURRENCY_API_URL=https://api.currency.com/
+  + CURRENCY_API_URL=https://api.currencylayer.com
   + JWT_SECRET_KEY=your_secret_key 
   + JWT_ALGORITHM=HS256 
   + ACCESS_TOKEN_EXPIRE_MINUTES=30
@@ -108,5 +108,5 @@ curl -X POST "http://localhost:8000/user/login/" \
 
 ### Важные замечания
 + Перед запуском убедитесь, что у вас настроена база данных и она запущена.
-+ Для безопасности не храните секретные ключи в публичных репозиториях.
++ Для использования необходимо получить API-ключ на https://api.currencylayer.com
 + Для тестирования используйте отдельную тестовую базу данных.
