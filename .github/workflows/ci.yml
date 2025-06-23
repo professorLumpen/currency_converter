@@ -32,12 +32,16 @@ jobs:
           --health-retries 5
 
     env:
-      TEST_DB_NAME: testdb
-      DB_HOST: localhost
-      DB_PORT: 5432
-      DB_USER: testuser
-      DB_PASS: testpassword
-      DATABASE_URL: postgresql+asyncpg://testuser:testpassword@localhost:5432/testdb
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASS: ${{ secrets.DB_PASS }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      TEST_DB_NAME: ${{ secrets.TEST_DB_NAME }}
+      CURRENCY_API_KEY: ${{ secrets.CURRENCY_API_KEY }}
+      CURRENCY_API_URL: ${{ secrets.CURRENCY_API_URL }} # если тоже секрет
+      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
 
     steps:
       - name: Checkout code
